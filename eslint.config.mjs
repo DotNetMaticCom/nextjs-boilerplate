@@ -13,26 +13,24 @@ export default tseslint.config(
       ".next/",
       "dist/",
       "node_modules/",
-      // Shadcn UI tarafından otomatik oluşturulan veya kütüphane dosyaları için
-      // "src/components/ui/.shadcn.tsx", // Eğer böyle bir dosya varsa
-      "tailwind.config.ts", // Bu dosyalar kendi lint kurallarına sahip olabilir
-      "postcss.config.mjs", // .js -> .mjs olarak güncellendi
-      "next.config.ts",     // .mjs -> .ts olarak güncellendi
+      "tailwind.config.ts",
+      "postcss.config.mjs",
+      "next.config.ts",
     ],
   },
   js.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked, // TypeScript için önerilen kurallar
-  ...tseslint.configs.stylisticTypeChecked,  // Stilistik TypeScript kuralları
+  ...tseslint.configs.recommendedTypeChecked,
+  ...tseslint.configs.stylisticTypeChecked,
   {
-    files: ["src/**/*.{ts,tsx}"], // Sadece src içindeki dosyalar için linting
+    files: ["src/**/*.{ts,tsx}"],
     languageOptions: {
       globals: {
         ...globals.browser,
-        ...globals.node, // Next.js hem tarayıcı hem de Node.js ortamında çalışabilir
+        ...globals.node,
       },
       parserOptions: {
-        project: ["./tsconfig.json"], // Projenin kök dizinindeki tsconfig.json'u kullan
-        tsconfigRootDir: import.meta.dirname, // eslint.config.js'nin bulunduğu dizin
+        project: ["./tsconfig.json"],
+        tsconfigRootDir: import.meta.dirname,
       },
     },
     plugins: {
@@ -41,13 +39,13 @@ export default tseslint.config(
     },
     settings: {
       next: {
-        rootDir: "./", // Projenin kök dizini
+        rootDir: "./",
       },
     },
     rules: {
-      ...reactHooks.configs.recommended.rules, // React Hooks için kurallar
-      ...nextPlugin.configs.recommended.rules, // Next.js için önerilen kurallar
-      ...nextPlugin.configs["core-web-vitals"].rules, // Core Web Vitals için kurallar
+      ...reactHooks.configs.recommended.rules,
+      ...nextPlugin.configs.recommended.rules,
+      ...nextPlugin.configs["core-web-vitals"].rules,
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {
@@ -56,22 +54,21 @@ export default tseslint.config(
           caughtErrorsIgnorePattern: "^_",
         },
       ],
-      "@typescript-eslint/explicit-function-return-type": "off", // Fonksiyon dönüş tiplerini zorunlu kılma
-      "@typescript-eslint/no-explicit-any": "warn", // 'any' kullanımı için uyar
-      "@typescript-eslint/no-misused-promises": [ // Promise'lerin yanlış kullanımı
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-misused-promises": [
         "error",
         {
           checksVoidReturn: {
-            attributes: false, // React event handler'ları (örn: onClick={async () => ...}) için
+            attributes: false,
           },
         },
       ],
-      "@typescript-eslint/consistent-type-imports": "warn", // Tip importlarını tutarlı yap
+      "@typescript-eslint/consistent-type-imports": "warn",
     },
   },
   {
-    // Proje yapılandırma dosyaları için (örn: eslint.config.js, next.config.mjs)
-    files: ["*.config.{js,mjs,cjs,ts}"], // .ts eklendi (next.config.ts, tailwind.config.ts)
+    files: ["*.config.{js,mjs,cjs,ts}"],
     languageOptions: {
       globals: {
         ...globals.node,
@@ -82,13 +79,8 @@ export default tseslint.config(
       },
     },
     rules: {
-      // Bu dosyalarda tip kontrolü gerekmeyebilir
       "@typescript-eslint/no-var-requires": "off",
       "@typescript-eslint/explicit-module-boundary-types": "off",
-      // Gerekirse eklenebilecek diğer kurallar:
-      // "@typescript-eslint/no-unsafe-assignment": "off",
-      // "@typescript-eslint/no-unsafe-call": "off",
-      // "@typescript-eslint/no-unsafe-member-access": "off",
     }
   }
 );
