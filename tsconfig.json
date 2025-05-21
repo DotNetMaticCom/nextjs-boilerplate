@@ -1,27 +1,39 @@
+// tsconfig.json
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "esnext", // "es5" yerine daha modern bir hedef
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
-    "noEmit": true,
+    "forceConsistentCasingInFileNames": true, // Tutarlı dosya adı kullanımı
+    "noEmit": true, // Derlenmiş dosyaları gösterme
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "bundler", // Modern paket çözümleme
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "preserve", // JSX'i olduğu gibi bırak (Next.js işleyecek)
     "incremental": true,
+    "baseUrl": "./", // Takma adlar için temel yol
+    "paths": {
+      "@/*": ["src/*"] // "@/" takma adını "src/" klasörüne yönlendir
+    },
     "plugins": [
       {
         "name": "next"
       }
-    ],
-    "paths": {
-      "@/*": ["./*"]
-    }
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "src/**/*.ts",      // src içindeki tüm .ts
+    "src/**/*.tsx",     // src içindeki tüm .tsx
+    ".next/types/**/*.ts",
+    "eslint.config.mjs",  // Kök dizindeki ESLint
+    "tailwind.config.ts", // Kök dizindeki Tailwind config
+    "next.config.ts",     // Kök dizindeki Next.js config (.ts oldu)
+    "postcss.config.mjs"  // Kök dizindeki PostCSS config
+  ],
   "exclude": ["node_modules"]
 }
