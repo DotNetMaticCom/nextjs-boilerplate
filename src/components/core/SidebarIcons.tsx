@@ -1,10 +1,11 @@
+// src/components/core/SidebarIcons.tsx
 'use client';
 
 import React from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import type { SidebarIconItem } from "@/data/sidebarData";
+import type { SidebarIconItem } from "@/data/sidebarData"; // Bu tip güncellendi
 import { Settings, LogOut } from "lucide-react";
 
 interface SidebarIconsProps {
@@ -46,7 +47,8 @@ const SidebarIcons: React.FC<SidebarIconsProps> = ({
                   aria-label={item.title}
                   aria-pressed={index === activeIconIndex}
                 >
-                  {React.isValidElement(item.icon) ? React.cloneElement(item.icon as React.ReactElement, { size: 20 }) : null}
+                  {/* Düzeltilmiş cloneElement kullanımı */}
+                  {React.cloneElement(item.icon, { size: 20 })}
                 </button>
               </TooltipTrigger>
               <TooltipContent

@@ -18,7 +18,7 @@ import {
 import type { SectionNames } from "@/hooks/useSidebarState"; // Hook'tan SectionNames tipini import et
 
 export interface SidebarIconItem {
-  icon: React.ReactNode;
+  icon: React.ReactElement<{ className?: string, size?: number }>; // Güncellendi: className ve size kabul eden element
   title: string;
   // İsteğe bağlı: Bu ikona tıklandığında hangi sidebar bölümlerinin açılacağını/kapanacağını belirleyebiliriz.
   // sectionsToToggle?: SectionNames[]; // Veya direkt index
