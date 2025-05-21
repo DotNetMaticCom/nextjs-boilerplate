@@ -1,7 +1,7 @@
 // src/components/core/SidebarSection.tsx
 'use client';
 
-import React from "react"; // Bu satır önemli
+import React from "react";
 import NavItem from "./NavItem";
 import { Plus, Minus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -23,7 +23,7 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
   onToggle,
   isLastSection,
 }) => {
-  return ( // Bu parantez önemli
+  return (
     <div className={cn(!isLastSection && "mb-1")}>
       <button
         type="button"
@@ -69,7 +69,7 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
                 <NavItem
                   key={item.href ?? item.text ?? index}
                   href={item.href ?? "#"}
-                  icon={item.icon}
+                  icon={item.icon} // Bu satır artık hata vermemeli
                   text={item.text}
                   badge={item.badge}
                 />
@@ -82,7 +82,7 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
         <div className="my-2 h-px bg-border mx-4"></div>
       )}
     </div>
-  ); // Bu parantez önemli
+  );
 };
 
 export default SidebarSection;
