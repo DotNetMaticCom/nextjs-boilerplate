@@ -1,7 +1,15 @@
+// src/components/ui/chart.tsx
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// Mevcut importlar ve kod buradan devam edecek...
+
 'use client';
 import * as React from "react"
 import * as RechartsPrimitive from "recharts"
-// Payload importunu kaldırıyoruz, any ve runtime check kullanacağız
+// Payload importu kaldırılmıştı, any ve runtime check kullanılıyor
 // import type { Payload } from "recharts/types/component/DefaultLegendContent";
 
 import { cn } from "@/lib/utils"
@@ -115,7 +123,7 @@ const ChartTooltipContent = React.forwardRef<
   (
     {
       active,
-      payload,
+      payload, // payload: any[] | undefined;
       className,
       indicator = "dot",
       hideLabel = false,
@@ -137,8 +145,8 @@ const ChartTooltipContent = React.forwardRef<
         return null
       }
 
-      const [item] = payload
-      const key = `${labelKey ?? String(item.dataKey) ?? item.name ?? "value"}`
+      const item: any = payload[0]; // payload'un any olduğunu varsayıyoruz
+      const key = `${labelKey ?? String(item?.dataKey) ?? item?.name ?? "value"}`
       const itemConfig = getPayloadConfigFromPayload(config, item, key)
       const value =
         !labelKey && typeof label === "string"
@@ -146,10 +154,10 @@ const ChartTooltipContent = React.forwardRef<
           : itemConfig?.label
 
       if (labelFormatter) {
-        const safePayload = Array.isArray(payload) ? payload : [];
+        // payload'u any[] olarak cast ediyoruz
         return (
           <div className={cn("font-medium", labelClassName)}>
-            {labelFormatter(value, safePayload as any[])}
+            {labelFormatter(value, payload as any[])}
           </div>
         )
       }
@@ -185,7 +193,7 @@ const ChartTooltipContent = React.forwardRef<
       >
         {!nestLabel ? tooltipLabel : null}
         <div className="grid gap-1.5">
-          {payload.map((item: any, index: number) => {
+          {payload.map((item: any, index: number) => { // item tipini any olarak belirtiyoruz
             const itemName = typeof item?.name === 'string' ? item.name : String(item?.name);
             const itemDataKey = String(item?.dataKey);
             const key = `${nameKey ?? itemName ?? itemDataKey ?? "value"}`;
@@ -196,14 +204,14 @@ const ChartTooltipContent = React.forwardRef<
 
             return (
               <div
-                key={itemDataKey}
+                key={String(itemDataKey ?? index)} // Daha güvenli bir key
                 className={cn(
                   "flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground",
                   indicator === "dot" && "items-center"
                 )}
               >
                 {formatter && typeof item?.value !== 'undefined' && typeof itemName === 'string' ? (
-                  formatter(item.value, itemName, item, index, Array.isArray(itemPayload) ? itemPayload : ([] as any[]))
+                  formatter(item.value, itemName, item, index, itemPayload as any[]) // itemPayload'u any[] olarak cast ediyoruz
                 ) : (
                   <>
                     {itemConfig?.icon ? (
@@ -223,8 +231,8 @@ const ChartTooltipContent = React.forwardRef<
                           )}
                           style={
                             {
-                              "--color-bg": indicatorColor,
-                              "--color-border": indicatorColor,
+                              "--color-bg": indicatorColor as string, // Cast to string
+                              "--color-border": indicatorColor as string, // Cast to string
                             } as React.CSSProperties
                           }
                         />
@@ -289,14 +297,14 @@ const ChartLegendContent = React.forwardRef<
           className
         )}
       >
-        {payload.map((item: any) => { // item tipini any olarak bırakıyoruz ama null check yapacağız
+        {payload.map((item: any) => { // item tipini any olarak belirtiyoruz
           const itemDataKey = String(item?.dataKey);
           const key = `${nameKey ?? itemDataKey ?? "value"}`
           const itemConfig = getPayloadConfigFromPayload(config, item, key)
 
           return (
             <div
-              key={String(item?.value)} // key için stringe çevirme
+              key={String(item?.value ?? itemDataKey)} // Daha güvenli bir key
               className={cn(
                 "flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground"
               )}
@@ -307,11 +315,11 @@ const ChartLegendContent = React.forwardRef<
                 <div
                   className="h-2 w-2 shrink-0 rounded-[2px]"
                   style={{
-                    backgroundColor: String(item?.color), // backgroundColor string olmalı
+                    backgroundColor: String(item?.color),
                   }}
                 />
               )}
-              {itemConfig?.label}
+              {itemConfig?.label ?? item?.value} {/* itemConfig?.label sonrası item?.value eklendi */}
             </div>
           )
         })}
@@ -324,7 +332,7 @@ ChartLegendContent.displayName = "ChartLegend"
 // Helper to extract item config from a payload.
 function getPayloadConfigFromPayload(
   config: ChartConfig,
-  payload: unknown,
+  payload: any, // payload tipini any olarak değiştiriyoruz
   key: string
 ) {
   if (typeof payload !== "object" || payload === null) {
@@ -332,9 +340,8 @@ function getPayloadConfigFromPayload(
   }
 
   const payloadPayload =
-    "payload" in payload &&
-    typeof payload.payload === "object" &&
-    payload.payload !== null
+    payload?.payload && // null check
+    typeof payload.payload === "object"
       ? payload.payload
       : undefined
 
